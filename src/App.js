@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box } from '@mui/material';
+import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box, Grid } from '@mui/material';
 import { styled } from '@mui/system';
 
 const App = () => {
@@ -8,7 +8,7 @@ const App = () => {
   );
 
   const [labels, setLabels] = useState(
-    Array(10).fill("").map((label, index) => localStorage.getItem(`label${index + 1}`) || label)
+    Array(10).fill("").map((_, index) => localStorage.getItem(`label${index + 1}`) || "")
   );
 
   const handleKeyPress = (event) => {
@@ -49,45 +49,58 @@ const App = () => {
     };
   }, [counters]);
 
+  const CountersTable = ({ start, end }) => (
+    <Table>
+      <TableBody>
+        {counters.slice(start, end).map((counter, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <Typography variant="overline" display="block">
+                Counter
+              </Typography>
+              <Typography variant="body1" display="block" sx={{textAlign: 'center'}}>
+                No. {start + index + 1}
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="h2">
+                {counter}
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <TextField
+                fullWidth
+                placeholder='Add a label'
+                value={labels[start + index]}
+                onChange={(e) => handleChangeLabel(start + index, e)}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>
         Counters
       </Typography>
       <Typography variant="subtitle1" gutterBottom>
         Press a number key to increment the corresponding counter.
       </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-evenly', marginBottom: '20px'}}>
         <Button variant="contained" color="primary" onClick={() => { handleResetCounters(); handleResetLabels(); }}>Reset everything</Button>
         <Button variant="outlined" onClick={handleResetCounters}>Reset counters</Button>
         <Button variant="outlined" onClick={handleResetLabels}>Reset labels</Button>
       </Box>
-      <Table>
-        <TableBody>
-          {counters.map((counter, index) => (
-            <TableRow key={index}>
-              <TableCell>
-                <Typography variant="h6">
-                  Counter #{(index + 1) % 10}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6">
-                  {counter}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <TextField
-                  fullWidth
-                  placeholder='Add a label'
-                  value={labels[index]}
-                  onChange={(e) => handleChangeLabel(index, e)}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Grid container spacing={3}>
+        {[0, 1].map((_, index) => (
+          <Grid item xs={6} key={index}>
+            <CountersTable start={index * 5} end={(index + 1) * 5} />
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
 };
