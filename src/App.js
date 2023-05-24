@@ -53,7 +53,7 @@ const App = () => {
     <Table>
       <TableBody>
         {counters.slice(start, end).map((counter, index) => (
-          <TableRow key={index}>
+          <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { borderBottom: 0 } }}>
             <TableCell>
               <Typography variant="overline" display="block">
                 Counter
