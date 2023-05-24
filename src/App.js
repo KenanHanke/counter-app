@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Button, TextField, Card, Box } from '@mui/material';
+import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box } from '@mui/material';
 import { styled } from '@mui/system';
-
-const CounterCard = styled(Card)({
-  margin: '10px 0',
-  padding: '10px',
-});
 
 const App = () => {
   const [counters, setCounters] = useState(
@@ -67,19 +62,32 @@ const App = () => {
         <Button variant="outlined" onClick={handleResetCounters}>Reset counters</Button>
         <Button variant="outlined" onClick={handleResetLabels}>Reset labels</Button>
       </Box>
-      {counters.map((counter, index) => (
-        <CounterCard key={index}>
-          <Typography variant="h6" gutterBottom>
-            Counter {(index + 1) % 10}: {counter}
-          </Typography>
-          <TextField
-            fullWidth
-            placeholder='Add a label'
-            value={labels[index]}
-            onChange={(e) => handleChangeLabel(index, e)}
-          />
-        </CounterCard>
-      ))}
+      <Table>
+        <TableBody>
+          {counters.map((counter, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                <Typography variant="h6">
+                  Counter #{(index + 1) % 10}
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">
+                  {counter}
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <TextField
+                  fullWidth
+                  placeholder='Add a label'
+                  value={labels[index]}
+                  onChange={(e) => handleChangeLabel(index, e)}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Container>
   );
 };
