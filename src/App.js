@@ -16,6 +16,12 @@ const App = () => {
     }
   };
 
+  const handleReset = () => {
+    const resetCounters = Array(10).fill(0);
+    setCounters(resetCounters);
+    resetCounters.forEach((_, index) => localStorage.setItem(`counter${index + 1}`, 0));
+  };
+
   useEffect(() => {
     window.addEventListener('keypress', handleKeyPress);
 
@@ -27,6 +33,7 @@ const App = () => {
   return (
     <div>
       <p>Press a number key to increment the corresponding counter.</p>
+      <button onClick={handleReset}>Reset all counters</button>
       {counters.map((counter, index) => (
         <div key={index}>Counter {(index + 1) % 10}: {counter}</div>
       ))}
