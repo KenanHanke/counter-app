@@ -1,50 +1,35 @@
-import React from 'react';
-import { useLocalStorage } from 'react-use';
+import React, { useState, useEffect } from 'react';
 
 const App = () => {
-  // Initialize counters with values from localStorage or zero
-  const [counter1, setCounter1] = useLocalStorage('counter1', 0);
-  const [counter2, setCounter2] = useLocalStorage('counter2', 0);
-  const [counter3, setCounter3] = useLocalStorage('counter3', 0);
-  const [counter4, setCounter4] = useLocalStorage('counter4', 0);
+  const [counters, setCounters] = useState(
+    Array(10).fill(0).map((_, index) => localStorage.getItem(`counter${index + 1}`) || 0)
+  );
 
-  // Handle key presses
   const handleKeyPress = (event) => {
-    switch(event.key) {
-      case '1':
-        setCounter1(counter1 + 1);
-        break;
-      case '2':
-        setCounter2(counter2 + 1);
-        break;
-      case '3':
-        setCounter3(counter3 + 1);
-        break;
-      case '4':
-        setCounter4(counter4 + 1);
-        break;
-      default:
-        break;
+    const key = event.key;
+    if (key >= '0' && key <= '9') {
+      const index = key === '0' ? 9 : parseInt(key, 10) - 1;
+      const newCounters = [...counters];
+      newCounters[index] = parseInt(newCounters[index], 10) + 1;
+      setCounters(newCounters);
+      localStorage.setItem(`counter${index + 1}`, newCounters[index]);
     }
-  }
+  };
 
-  // Attach key press handler
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('keypress', handleKeyPress);
 
-    // Cleanup function
     return () => {
       window.removeEventListener('keypress', handleKeyPress);
-    }
-  }, [counter1, counter2, counter3, counter4]);
+    };
+  }, [counters]);
 
   return (
     <div>
-      <p>Press a key (1, 2, 3, 4) to increment the corresponding counter.</p>
-      <div>Counter 1: {counter1}</div>
-      <div>Counter 2: {counter2}</div>
-      <div>Counter 3: {counter3}</div>
-      <div>Counter 4: {counter4}</div>
+      <p>Press a number key to increment the corresponding counter.</p>
+      {counters.map((counter, index) => (
+        <div key={index}>Counter {(index + 1) % 10}: {counter}</div>
+      ))}
     </div>
   );
 };
