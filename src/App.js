@@ -53,27 +53,33 @@ const App = () => {
     <Table>
       <TableBody>
         {counters.slice(start, end).map((counter, index) => (
-          <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { borderBottom: 0 } }}>
+          <TableRow key={index} sx={{ '&:last-child td': { borderBottom: 0 } }}>
             <TableCell>
-              <Typography variant="overline" display="block">
-                Counter
-              </Typography>
-              <Typography variant="body1" display="block" sx={{textAlign: 'center'}}>
-                No. {start + index + 1}
-              </Typography>
+              <Box p={1}>
+                <Typography variant="overline" display="block">
+                  Counter
+                </Typography>
+                <Typography variant="body1" display="block" sx={{textAlign: 'center'}}>
+                  No. {start + index + 1}
+                </Typography>
+              </Box>
             </TableCell>
             <TableCell>
-              <Typography variant="h2">
-                {counter}
-              </Typography>
+              <Box p={1}>
+                <Typography variant="h2">
+                  {counter}
+                </Typography>
+              </Box>
             </TableCell>
             <TableCell>
-              <TextField
-                fullWidth
-                placeholder='Add a label'
-                value={labels[start + index]}
-                onChange={(e) => handleChangeLabel(start + index, e)}
-              />
+              <Box p={1}>
+                <TextField
+                  fullWidth
+                  placeholder='Add a label'
+                  value={labels[start + index]}
+                  onChange={(e) => handleChangeLabel(start + index, e)}
+                />
+              </Box>
             </TableCell>
           </TableRow>
         ))}
@@ -82,25 +88,31 @@ const App = () => {
   );
 
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4" gutterBottom>
-        Counters
-      </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        Press a number key to increment the corresponding counter.
-      </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'space-evenly', marginBottom: '20px'}}>
-        <Button variant="contained" color="primary" onClick={() => { handleResetCounters(); handleResetLabels(); }}>Reset everything</Button>
-        <Button variant="outlined" onClick={handleResetCounters}>Reset counters</Button>
-        <Button variant="outlined" onClick={handleResetLabels}>Reset labels</Button>
+    <Container maxWidth="lg">
+      <Box p={3}>
+        <Box p={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="h4" gutterBottom>
+            Counters
+          </Typography>
+          <Box p={1} sx={{ display: 'flex', gap: '10px' }}>
+            <Button variant="outlined" color="inherit" onClick={() => { handleResetCounters(); handleResetLabels(); }} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset everything</Button>
+            <Button variant="outlined" color="inherit" onClick={handleResetCounters} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset counters</Button>
+            <Button variant="outlined" color="inherit" onClick={handleResetLabels} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset labels</Button>
+          </Box>
+        </Box>
+        <Box p={1}>
+          <Typography variant="subtitle1" gutterBottom>
+            Press a number key to increment the corresponding counter.
+          </Typography>
+        </Box>
+        <Grid container spacing={5}>
+          {[0, 1].map((_, index) => (
+            <Grid item xs={6} key={index}>
+              <CountersTable start={index * 5} end={(index + 1) * 5} />
+            </Grid>
+          ))}
+        </Grid>
       </Box>
-      <Grid container spacing={3}>
-        {[0, 1].map((_, index) => (
-          <Grid item xs={6} key={index}>
-            <CountersTable start={index * 5} end={(index + 1) * 5} />
-          </Grid>
-        ))}
-      </Grid>
     </Container>
   );
 };
