@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Typography, Button, TextField, Card, Box } from '@mui/material';
+import { styled } from '@mui/system';
+
+const CounterCard = styled(Card)({
+  margin: '10px 0',
+  padding: '10px',
+});
 
 const App = () => {
   const [counters, setCounters] = useState(
@@ -48,17 +55,32 @@ const App = () => {
   }, [counters]);
 
   return (
-    <div>
-      <p>Press a number key to increment the corresponding counter.</p>
-      <button onClick={() => { handleResetCounters(); handleResetLabels(); }}>Reset everything</button>
-      <button onClick={handleResetCounters}>Reset counters</button>
-      <button onClick={handleResetLabels}>Reset labels</button>
+    <Container maxWidth="sm">
+      <Typography variant="h4" gutterBottom>
+        Counters
+      </Typography>
+      <Typography variant="subtitle1" gutterBottom>
+        Press a number key to increment the corresponding counter.
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
+        <Button variant="contained" color="primary" onClick={() => { handleResetCounters(); handleResetLabels(); }}>Reset everything</Button>
+        <Button variant="outlined" onClick={handleResetCounters}>Reset counters</Button>
+        <Button variant="outlined" onClick={handleResetLabels}>Reset labels</Button>
+      </Box>
       {counters.map((counter, index) => (
-        <div key={index}>Counter {(index + 1) % 10}:{counter}
-          <input type="text" value={labels[index]} onChange={(e) => handleChangeLabel(index, e)} />
-        </div>
+        <CounterCard key={index}>
+          <Typography variant="h6" gutterBottom>
+            {labels[index]} {(index + 1) % 10}: {counter}
+          </Typography>
+          <TextField
+            fullWidth
+            label="Label"
+            value={labels[index]}
+            onChange={(e) => handleChangeLabel(index, e)}
+          />
+        </CounterCard>
       ))}
-    </div>
+    </Container>
   );
 };
 
