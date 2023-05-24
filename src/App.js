@@ -13,7 +13,7 @@ const App = () => {
   );
 
   const [labels, setLabels] = useState(
-    Array(10).fill("Counter").map((label, index) => localStorage.getItem(`label${index + 1}`) || label)
+    Array(10).fill("").map((label, index) => localStorage.getItem(`label${index + 1}`) || label)
   );
 
   const handleKeyPress = (event) => {
@@ -34,7 +34,7 @@ const App = () => {
   };
 
   const handleResetLabels = () => {
-    const defaultLabels = Array(10).fill("Counter");
+    const defaultLabels = Array(10).fill("");
     setLabels(defaultLabels);
     defaultLabels.forEach((label, index) => localStorage.setItem(`label${index + 1}`, label));
   };
@@ -70,11 +70,11 @@ const App = () => {
       {counters.map((counter, index) => (
         <CounterCard key={index}>
           <Typography variant="h6" gutterBottom>
-            {labels[index]} {(index + 1) % 10}: {counter}
+            Counter {(index + 1) % 10}: {counter}
           </Typography>
           <TextField
             fullWidth
-            label="Label"
+            placeholder='Add a label'
             value={labels[index]}
             onChange={(e) => handleChangeLabel(index, e)}
           />
