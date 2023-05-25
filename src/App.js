@@ -1,45 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box, Grid } from '@mui/material';
 
-const CountersTable = ({ counters, labels, start, end, handleChangeLabel, handleFocus, handleBlur }) => (
-  <Table>
-    <TableBody>
-      {counters.slice(start, end).map((counter, index) => (
-        <TableRow key={index} sx={{ '&:last-child td': { borderBottom: 0 } }}>
-          <TableCell>
-            <Box p={1}>
-              <Typography variant="overline" display="block">
-                Counter
-              </Typography>
-              <Typography variant="body1" display="block" sx={{textAlign: 'center'}}>
-                No. {start + index + 1}
-              </Typography>
-            </Box>
-          </TableCell>
-          <TableCell>
-            <Box p={1}>
-              <Typography variant="h2">
-                {counter}
-              </Typography>
-            </Box>
-          </TableCell>
-          <TableCell>
-            <Box p={1}>
-              <TextField
-                fullWidth
-                placeholder='Add a label'
-                value={labels[start + index]}
-                onChange={(e) => handleChangeLabel(start + index, e)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-            </Box>
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+const CountersTable = ({ counters, labels, start, end, handleChangeLabel, handleFocus, handleBlur, inputFocused }) => {
+  const textFieldStyle = inputFocused ? { color: 'red' } : {};
+
+  return (
+    <Table>
+      <TableBody>
+        {counters.slice(start, end).map((counter, index) => (
+          <TableRow key={index} sx={{ '&:last-child td': { borderBottom: 0 } }}>
+            <TableCell>
+              <Box p={1}>
+                <Typography variant="overline" display="block" sx={textFieldStyle}>
+                  Counter
+                </Typography>
+                <Typography variant="body1" display="block" sx={{textAlign: 'center', ...textFieldStyle}}>
+                  No. {start + index + 1}
+                </Typography>
+              </Box>
+            </TableCell>
+            <TableCell>
+              <Box p={1}>
+                <Typography variant="h2" sx={textFieldStyle}>
+                  {counter}
+                </Typography>
+              </Box>
+            </TableCell>
+            <TableCell>
+              <Box p={1}>
+                <TextField
+                  fullWidth
+                  placeholder='Add a label'
+                  value={labels[start + index]}
+                  onChange={(e) => handleChangeLabel(start + index, e)}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                />
+              </Box>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
 
 const App = () => {
   const [counters, setCounters] = useState(
@@ -103,24 +107,24 @@ const App = () => {
     };
   }, [counters]);
 
-  const style = inputFocused ? { backgroundColor: 'red' } : {};
+  const buttonStyle = inputFocused ? { color: 'red' } : {};
 
   return (
-    <Container maxWidth="lg" style={style}>
+    <Container maxWidth="lg">
       <Box p={3}>
         <Box p={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" gutterBottom sx={buttonStyle}>
             Counters
           </Typography>
           <Box p={1} sx={{ display: 'flex', gap: '10px' }}>
-            <Button variant="outlined" color="inherit" onClick={() => { handleResetCounters(); handleResetLabels(); }} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset everything</Button>
-            <Button variant="outlined" color="inherit" onClick={handleResetCounters} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset counters</Button>
-            <Button variant="outlined" color="inherit" onClick={handleResetLabels} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset labels</Button>
+            <Button variant="outlined" color="inherit" style={buttonStyle} onClick={() => { handleResetCounters(); handleResetLabels(); }} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset everything</Button>
+            <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetCounters} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset counters</Button>
+            <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetLabels} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset labels</Button>
           </Box>
         </Box>
         <Box p={1}>
-          <Typography variant="subtitle1" gutterBottom>
-            Press a number key to increment the corresponding counter. {inputFocused && <b>PLEASE CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING.</b>}
+          <Typography variant="subtitle1" gutterBottom sx={buttonStyle}>
+            Press a number key to increment the corresponding counter. {inputFocused && <b>PLEASE CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING!</b>}
           </Typography>
         </Box>
         <Grid container spacing={5}>
@@ -134,6 +138,7 @@ const App = () => {
                 handleChangeLabel={handleChangeLabel} 
                 handleFocus={handleFocus}
                 handleBlur={handleBlur}
+                inputFocused={inputFocused}
               />
             </Grid>
           ))}
