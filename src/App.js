@@ -1,5 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box, Grid } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { red } from '@mui/material/colors';
+
+const theme = createTheme({
+  palette: {
+    primary: red,
+  },
+});
 
 const CountersTable = ({ counters, labels, start, end, handleChangeLabel, handleFocus, handleBlur, inputFocused }) => {
   const textFieldStyle = inputFocused ? { color: 'red' } : {};
@@ -56,7 +64,7 @@ const App = () => {
 
   const [inputFocused, setInputFocused] = useState(false);
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = useCallback((event) => {
     // If a text field is focused, don't handle the keypress event
     if (inputFocused) {
       return;
@@ -70,7 +78,7 @@ const App = () => {
       setCounters(newCounters);
       localStorage.setItem(`counter${index + 1}`, newCounters[index]);
     }
-  };
+  }, [inputFocused, counters, setCounters]); 
 
   const handleFocus = () => {
     setInputFocused(true);
@@ -105,46 +113,48 @@ const App = () => {
     return () => {
       window.removeEventListener('keypress', handleKeyPress);
     };
-  }, [counters]);
+  }, [counters, handleKeyPress]);
 
   const buttonStyle = inputFocused ? { color: 'red' } : {};
 
   return (
-    <Container maxWidth="lg">
-      <Box p={3}>
-        <Box p={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="h4" gutterBottom sx={buttonStyle}>
-            Counters
-          </Typography>
-          <Box p={1} sx={{ display: 'flex', gap: '10px' }}>
-            <Button variant="outlined" color="inherit" style={buttonStyle} onClick={() => { handleResetCounters(); handleResetLabels(); }} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset everything</Button>
-            <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetCounters} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset counters</Button>
-            <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetLabels} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset labels</Button>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="lg">
+        <Box p={3}>
+          <Box p={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h4" gutterBottom sx={buttonStyle}>
+              Counters
+            </Typography>
+            <Box p={1} sx={{ display: 'flex', gap: '10px' }}>
+              <Button variant="outlined" color="inherit" style={buttonStyle} onClick={() => { handleResetCounters(); handleResetLabels(); }} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset everything</Button>
+              <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetCounters} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset counters</Button>
+              <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetLabels} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset labels</Button>
+            </Box>
           </Box>
+          <Box p={1}>
+            <Typography variant="subtitle1" gutterBottom sx={buttonStyle}>
+              Press a number key to increment the corresponding counter. {inputFocused && <b>PLEASE CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING!</b>}
+            </Typography>
+          </Box>
+          <Grid container spacing={5}>
+            {[0, 1].map((_, index) => (
+              <Grid item xs={6} key={index}>
+                <CountersTable 
+                  start={index * 5} 
+                  end={(index + 1) * 5} 
+                  counters={counters} 
+                  labels={labels} 
+                  handleChangeLabel={handleChangeLabel} 
+                  handleFocus={handleFocus}
+                  handleBlur={handleBlur}
+                  inputFocused={inputFocused}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
-        <Box p={1}>
-          <Typography variant="subtitle1" gutterBottom sx={buttonStyle}>
-            Press a number key to increment the corresponding counter. {inputFocused && <b>PLEASE CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING!</b>}
-          </Typography>
-        </Box>
-        <Grid container spacing={5}>
-          {[0, 1].map((_, index) => (
-            <Grid item xs={6} key={index}>
-              <CountersTable 
-                start={index * 5} 
-                end={(index + 1) * 5} 
-                counters={counters} 
-                labels={labels} 
-                handleChangeLabel={handleChangeLabel} 
-                handleFocus={handleFocus}
-                handleBlur={handleBlur}
-                inputFocused={inputFocused}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    </Container>
+      </Container>
+    </ThemeProvider>
   );
 };
 
