@@ -10,7 +10,7 @@ const theme = createTheme({
 });
 
 const CountersTable = ({ counters, labels, start, end, handleChangeLabel, handleFocus, handleBlur, inputFocused }) => {
-  const textFieldStyle = inputFocused ? { color: 'red' } : {};
+  const textFieldStyle = inputFocused ? { color: 'primary.main' } : {};
 
   return (
     <Table>
@@ -115,7 +115,7 @@ const App = () => {
     };
   }, [counters, handleKeyPress]);
 
-  const buttonStyle = inputFocused ? { color: 'red' } : {};
+  const buttonStyle = inputFocused ? { color: 'primary.main' } : {};
 
   return (
     <ThemeProvider theme={theme}>
@@ -126,14 +126,14 @@ const App = () => {
               Counters
             </Typography>
             <Box p={1} sx={{ display: 'flex', gap: '10px' }}>
-              <Button variant="outlined" color="inherit" style={buttonStyle} onClick={() => { handleResetCounters(); handleResetLabels(); }} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset everything</Button>
-              <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetCounters} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset counters</Button>
-              <Button variant="outlined" color="inherit" style={buttonStyle} onClick={handleResetLabels} sx={{ borderRadius: '20px', textTransform: 'none' }}>Reset labels</Button>
+              <Button variant="outlined" color="inherit" onClick={() => { handleResetCounters(); handleResetLabels(); }} sx={{ ...buttonStyle, borderRadius: '20px', textTransform: 'none' }}>Reset everything</Button>
+              <Button variant="outlined" color="inherit" onClick={handleResetCounters} sx={{ ...buttonStyle, borderRadius: '20px', textTransform: 'none' }}>Reset counters</Button>
+              <Button variant="outlined" color="inherit" onClick={handleResetLabels} sx={{ ...buttonStyle, borderRadius: '20px', textTransform: 'none' }}>Reset labels</Button>
             </Box>
           </Box>
           <Box p={1}>
             <Typography variant="subtitle1" gutterBottom sx={buttonStyle}>
-              Press a number key to increment the corresponding counter. {inputFocused && <b>PLEASE CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING!</b>}
+              Press a number key to increment the corresponding counter. {inputFocused && <b>CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING!</b>}
             </Typography>
           </Box>
           <Grid container spacing={5}>
