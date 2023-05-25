@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box, Grid } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { deepPurple } from '@mui/material/colors';
+import { red } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {
-    primary: deepPurple,
+    primary: red,
   },
 });
 
@@ -152,8 +152,7 @@ const App = () => {
           </Box>
           <Box p={1}>
             <Typography variant="subtitle1" gutterBottom sx={buttonStyle}>
-              Press a number key to increment the corresponding counter. Note that this website can be opened and used at this URL even when you are offline!
-              {inputFocused && <Box p={1}><Typography variant='h6' align='center' sx={{color: '#aa1100', fontWeight: '400'}}>Cannot count while a label field is active; click on the background to start counting!</Typography></Box>}
+              Press a number key to increment the corresponding counter. {inputFocused && <b>CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING!</b>}
             </Typography>
           </Box>
           <Grid container spacing={5}>
