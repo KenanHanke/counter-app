@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box, Grid } from '@mui/material';
 
-const CountersTable = ({ counters, labels, start, end, handleChangeLabel }) => (
+const CountersTable = ({ counters, labels, start, end, handleChangeLabel, handleFocus, handleBlur }) => (
   <Table>
     <TableBody>
       {counters.slice(start, end).map((counter, index) => (
@@ -30,6 +30,8 @@ const CountersTable = ({ counters, labels, start, end, handleChangeLabel }) => (
                 placeholder='Add a label'
                 value={labels[start + index]}
                 onChange={(e) => handleChangeLabel(start + index, e)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
               />
             </Box>
           </TableCell>
@@ -48,9 +50,11 @@ const App = () => {
     Array(10).fill("").map((_, index) => localStorage.getItem(`label${index + 1}`) || "")
   );
 
+  const [inputFocused, setInputFocused] = useState(false);
+
   const handleKeyPress = (event) => {
     // If a text field is focused, don't handle the keypress event
-    if (document.activeElement.tagName === 'INPUT') {
+    if (inputFocused) {
       return;
     }
 
@@ -62,6 +66,14 @@ const App = () => {
       setCounters(newCounters);
       localStorage.setItem(`counter${index + 1}`, newCounters[index]);
     }
+  };
+
+  const handleFocus = () => {
+    setInputFocused(true);
+  };
+
+  const handleBlur = () => {
+    setInputFocused(false);
   };
 
   const handleResetCounters = () => {
@@ -91,8 +103,10 @@ const App = () => {
     };
   }, [counters]);
 
+  const style = inputFocused ? { backgroundColor: 'red' } : {};
+
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" style={style}>
       <Box p={3}>
         <Box p={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h4" gutterBottom>
@@ -106,7 +120,7 @@ const App = () => {
         </Box>
         <Box p={1}>
           <Typography variant="subtitle1" gutterBottom>
-            Press a number key to increment the corresponding counter.
+            Press a number key to increment the corresponding counter. {inputFocused && <b>PLEASE CLICK OUTSIDE OF THE TEXT FIELD TO START COUNTING.</b>}
           </Typography>
         </Box>
         <Grid container spacing={5}>
@@ -118,6 +132,8 @@ const App = () => {
                 counters={counters} 
                 labels={labels} 
                 handleChangeLabel={handleChangeLabel} 
+                handleFocus={handleFocus}
+                handleBlur={handleBlur}
               />
             </Grid>
           ))}
