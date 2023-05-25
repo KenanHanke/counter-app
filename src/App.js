@@ -138,7 +138,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="lg">
+      <Container style={{ maxWidth: '1280px', minWidth: '832px' }}>
         <Box p={3}>
           <Box p={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h4" gutterBottom sx={buttonStyle}>
