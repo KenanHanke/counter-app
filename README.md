@@ -1,7 +1,8 @@
 # Counter App
 
 A simple web app made for those of us who have to count neurons (or anything else) and
-want to do so ergonomically. It's hosted at <kenanhanke.github.io/counter-app> and fully
+want to do so ergonomically. It's hosted at
+[kenanhanke.github.io/counter-app](https://kenanhanke.github.io/counter-app/) and fully
 works offline (thanks to service workers).
 
 The app was built using [React](https://reactjs.org/) and [Material-UI](https://material-ui.com/).
