@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Container, Typography, Button, TextField, Table, TableBody, TableRow, TableCell, Box, Grid } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
@@ -64,22 +64,6 @@ const App = () => {
 
   const [inputFocused, setInputFocused] = useState(false);
 
-  const handleKeyPress = useCallback((event) => {
-    // If a text field is focused, don't handle the keypress event
-    if (inputFocused) {
-      return;
-    }
-
-    const key = event.key;
-    if (key >= '0' && key <= '9') {
-      const index = key === '0' ? 9 : parseInt(key, 10) - 1;
-      const newCounters = [...counters];
-      newCounters[index] = parseInt(newCounters[index], 10) + 1;
-      setCounters(newCounters);
-      localStorage.setItem(`counter${index + 1}`, newCounters[index]);
-    }
-  }, [inputFocused, counters, setCounters]); 
-
   const handleFocus = () => {
     setInputFocused(true);
   };
@@ -107,13 +91,48 @@ const App = () => {
     localStorage.setItem(`label${index + 1}`, newLabels[index]);
   };
 
+  // This set will hold the keys currently being pressed
+  const keysBeingPressed = useRef(new Set());
+
+  const handleKeyDown = useCallback((event) => {
+    // If a text field is focused, don't handle the keypress event
+    if (inputFocused) {
+      return;
+    }
+
+    const key = event.key;
+
+    // Check if key is already being pressed
+    if (keysBeingPressed.current.has(key)) {
+      return;
+    }
+
+    // Add key to the set of keys being pressed
+    keysBeingPressed.current.add(key);
+
+    if (key >= '0' && key <= '9') {
+      const index = key === '0' ? 9 : parseInt(key, 10) - 1;
+      const newCounters = [...counters];
+      newCounters[index] = parseInt(newCounters[index], 10) + 1;
+      setCounters(newCounters);
+      localStorage.setItem(`counter${index + 1}`, newCounters[index]);
+    }
+  }, [inputFocused, counters, setCounters]);
+
+  const handleKeyUp = useCallback((event) => {
+    // Remove key from the set of keys being pressed
+    keysBeingPressed.current.delete(event.key);
+  }, []);
+
   useEffect(() => {
-    window.addEventListener('keypress', handleKeyPress);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
 
     return () => {
-      window.removeEventListener('keypress', handleKeyPress);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [counters, handleKeyPress]);
+  }, [counters, handleKeyDown, handleKeyUp]);
 
   const buttonStyle = inputFocused ? { color: 'primary.main' } : {};
 
