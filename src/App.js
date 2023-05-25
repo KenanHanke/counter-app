@@ -23,7 +23,7 @@ const CountersTable = ({ counters, labels, start, end, handleChangeLabel, handle
                   Counter
                 </Typography>
                 <Typography variant="body1" display="block" sx={{textAlign: 'center', ...textFieldStyle}}>
-                  No. {start + index + 1}
+                  # {(start + index + 1) % 10}
                 </Typography>
               </Box>
             </TableCell>
